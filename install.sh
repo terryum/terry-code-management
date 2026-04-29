@@ -42,4 +42,4 @@ chmod +x "$REPO"/migration/*.sh 2>/dev/null || true
 
 echo ""
 echo "✓ Done. Reload your Claude Code session to pick up the new skills."
-echo "  Try: /weekly-audit  or  /security-audit"
+echo "  Try: /wip-audit  or  /security-audit"

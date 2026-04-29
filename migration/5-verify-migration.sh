@@ -57,7 +57,7 @@ for sl in m.get("symlinks", []):
 
 # 3. Skills (~/.claude/skills/ should have symlinks pointing to terry-code-management)
 skill_dir = os.path.expanduser("~/.claude/skills")
-expected = ["weekly-audit", "security-audit"]
+expected = ["wip-audit", "security-audit"]
 for s in expected:
     p = os.path.join(skill_dir, s)
     if os.path.islink(p):

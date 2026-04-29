@@ -8,7 +8,7 @@ terry-code-management/
 ├── install.sh          Idempotent installer: symlinks skills/* into ~/.claude/skills/
 ├── .gitignore          Excludes secrets, machine-specific output, runtime caches
 ├── skills/
-│   ├── weekly-audit/   Multi-repo housekeeping
+│   ├── wip-audit/      Multi-repo WIP/leftover-work housekeeping
 │   └── security-audit/ Multi-repo security scanning
 ├── migration/          5-step laptop migration pipeline
 └── docs/

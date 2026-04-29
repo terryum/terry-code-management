@@ -1,8 +1,8 @@
 # terry-code-management
 
-A meta-repository for managing many codebases at once: weekly audits, security checks, and laptop migration tooling. Designed to live alongside other repos in a single root folder (e.g. `~/Codes/`) and oversee them all.
+A meta-repository for managing many codebases at once: WIP/leftover-work audits, security checks, and laptop migration tooling. Designed to live alongside other repos in a single root folder (e.g. `~/Codes/`) and oversee them all.
 
-여러 코드베이스를 동시에 관리하기 위한 메타 레포 — 주간 위생 점검, 보안 검사, 노트북 이전 도구를 제공합니다. 다른 모든 레포가 한 폴더(`~/Codes/` 등) 아래에 있다는 가정 하에 그 위에서 작동합니다.
+여러 코드베이스를 동시에 관리하기 위한 메타 레포 — WIP/잔여 작업 위생 점검, 보안 검사, 노트북 이전 도구를 제공합니다. 다른 모든 레포가 한 폴더(`~/Codes/` 등) 아래에 있다는 가정 하에 그 위에서 작동합니다.
 
 ---
 
@@ -11,8 +11,8 @@ A meta-repository for managing many codebases at once: weekly audits, security c
 ```
 terry-code-management/
 ├── skills/
-│   ├── code-audit/          Umbrella router — runs sub-audits (weekly + security by default)
-│   ├── weekly-audit/        Weekly housekeeping: scan repos + plans, dead-plan cleanup, handoff prompts
+│   ├── code-audit/          Umbrella router — runs sub-audits (wip + security by default)
+│   ├── wip-audit/           WIP/leftover-work hygiene: scan repos + plans, dead-plan cleanup, handoff prompts
 │   └── security-audit/      Cross-repo secret scan, public-exposure check, OSV vulnerability scan
 ├── migration/               Laptop migration toolkit (source → bundle → target → verify)
 ├── docs/                    Architecture and security guidance
@@ -22,8 +22,8 @@ terry-code-management/
 ```
 terry-code-management/
 ├── skills/
-│   ├── code-audit/          상위 라우터 — sub-audit 들을 dispatch (기본: weekly + security 순차)
-│   ├── weekly-audit/        주간 위생 — 레포·플랜 스캔, dead-plan 청소, 핸드오프 프롬프트
+│   ├── code-audit/          상위 라우터 — sub-audit 들을 dispatch (기본: wip + security 순차)
+│   ├── wip-audit/           WIP/잔여 작업 위생 — 레포·플랜 스캔, dead-plan 청소, 핸드오프 프롬프트
 │   └── security-audit/      교차 레포 시크릿 스캔, 공개 노출 점검, OSV 취약점 검사
 ├── migration/               노트북 이전 도구 (소스 → 번들 → 타깃 → 검증)
 ├── docs/                    아키텍처 및 보안 가이드
@@ -44,9 +44,9 @@ After install, in any Claude Code session:
 
 설치 후 Claude Code 세션에서:
 
-- `/code-audit` (no args) → runs weekly + security in order — 인자 없이 호출 시 둘 다 순차 실행
+- `/code-audit` (no args) → runs wip + security in order — 인자 없이 호출 시 둘 다 순차 실행
 - `/code-audit 보안 점검해줘` → security only — 보안만
-- `/code-audit 주간 정리` → weekly only — 주간 위생만
+- `/code-audit WIP 정리` → wip-audit only — WIP/잔여 작업 정리만
 - `/code-audit 리팩토링 필요한 파일` → friendly "🚧 not yet" message + offer to build it — 미구현 안내
 
 ---

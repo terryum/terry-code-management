@@ -1,10 +1,10 @@
 ---
 name: code-audit
 description: |
-  통합 코드베이스 감사 entry point. 인자 없이 호출되면 weekly-audit + security-audit 을
-  순차 실행. 인자 ('보안 점검', '주간 정리', '리팩토링 대상 찾아줘' 등) 가 있으면
-  해당 sub-audit 만 실행. '/code-audit', '코드 감사', '코드 점검', '전체 점검',
-  'audit', '점검해줘', 'check up', '코드 상태', '뭐 해야 하지', '주간 정리',
+  통합 코드베이스 감사 entry point. 인자 없이 호출되면 wip-audit + security-audit 을
+  순차 실행. 인자 ('보안 점검', 'WIP 정리', '주간 정리', '리팩토링 대상 찾아줘' 등) 가
+  있으면 해당 sub-audit 만 실행. '/code-audit', '코드 감사', '코드 점검', '전체 점검',
+  'audit', '점검해줘', 'check up', '코드 상태', '뭐 해야 하지', 'WIP 정리', '주간 정리',
   '보안 점검', '시크릿 스캔' 등 시 반드시 이 스킬을 사용. 확장 가능한 라우터 —
   새 감사 유형이 추가되면 라우팅 표만 갱신하면 된다. 단일 repo 내부 작업이나
   특정 파일 리뷰는 이 스킬 대상 아님.
@@ -18,7 +18,7 @@ description: |
 
 | Sub-audit | 트리거 키워드 | 실행 방법 | 상태 |
 |---|---|---|---|
-| **weekly-audit** | 주간, 위생, 플랜, 부스러기, 정리, dead plan, 멈췄지, 남은 일 | `Skill(weekly-audit)` | ✅ available |
+| **wip-audit** | WIP, 잔여 작업, 주간, 위생, 플랜, 부스러기, 정리, dead plan, 멈췄지, 남은 일 | `Skill(wip-audit)` | ✅ available |
 | **security-audit** | 보안, security, 시크릿, secret, 키 노출, 취약점, gitleaks, OSV, sensitive | `Skill(security-audit)` | ✅ available |
 | **refactor-audit** | 리팩토링, 긴 파일, 무거운, 복잡, 큰 폴더, 파일 너무 길어, 파일 사이즈 | (미구현) | 🚧 placeholder |
 | **doc-audit** | 문서, 설명서, stale README, 문서 빠진, 문서 검사 | (미구현) | 🚧 placeholder |
@@ -29,17 +29,17 @@ description: |
 ### Mode A — 인자 없음 (기본)
 사용자가 `/code-audit` 만 입력 또는 "전체 점검해줘" 등 폭넓은 표현:
 
-1. `Skill(weekly-audit)` 실행 → 5단계 흐름 끝까지 (사용자 confirm 까지 포함)
+1. `Skill(wip-audit)` 실행 → 5단계 흐름 끝까지 (사용자 confirm 까지 포함)
 2. 그 다음 `Skill(security-audit)` 실행 → 5단계 흐름 끝까지
-3. 마지막에 두 결과의 짧은 합계 (예: "Weekly: 3개 정리됨, Security: 2 HIGH 발견")
+3. 마지막에 두 결과의 짧은 합계 (예: "WIP: 3개 정리됨, Security: 2 HIGH 발견")
 
-**왜 순차**: 두 감사가 독립적이지만 weekly 가 main 정리(commit/push)를 하기 때문에 security 가 깨끗한 상태에서 검사하는 게 정확.
+**왜 순차**: 두 감사가 독립적이지만 wip-audit 이 main 정리(commit/push)를 하기 때문에 security 가 깨끗한 상태에서 검사하는 게 정확.
 
 ### Mode B — 명시적 sub-audit
 사용자가 특정 키워드 포함:
 - "보안 점검", "시크릿 스캔" → `Skill(security-audit)` 만
-- "주간 정리", "플랜 정리", "부스러기" → `Skill(weekly-audit)` 만
-- 명시적 + 추가 키워드 → 매칭되는 모든 sub-audit (예: "주간 + 보안 둘 다")
+- "WIP 정리", "주간 정리", "플랜 정리", "부스러기" → `Skill(wip-audit)` 만
+- 명시적 + 추가 키워드 → 매칭되는 모든 sub-audit (예: "WIP + 보안 둘 다")
 
 ### Mode C — 미구현 sub-audit 요청
 "리팩토링 필요한 파일 찾아줘", "stale 문서 찾아줘" 같이 위 라우팅 표의 🚧 카테고리:
@@ -67,12 +67,12 @@ description: |
 
 ```
 > /code-audit
-[Mode A: weekly-audit 실행 → security-audit 실행 → 합계]
+[Mode A: wip-audit 실행 → security-audit 실행 → 합계]
 
 > /code-audit 보안 점검해줘
 [Mode B: security-audit 만]
 
-> /code-audit 주간 정리하고 보안도 같이
+> /code-audit WIP 정리하고 보안도 같이
 [Mode B: 둘 다 — 명시적]
 
 > /code-audit 리팩토링 필요한 프로젝트 찾아줘
@@ -94,7 +94,7 @@ description: |
 
 ✅ 이 스킬을 사용:
 - "/code-audit", "코드 감사", "전체 점검", "점검해줘", "audit"
-- "주간 정리", "보안 점검" (sub-skill 직접 호출보다 이쪽이 우선)
+- "WIP 정리", "주간 정리", "보안 점검" (sub-skill 직접 호출보다 이쪽이 우선)
 - "내 코드 상태 어때", "정리할 게 뭐 있어"
 
 ❌ 다른 도구 사용:

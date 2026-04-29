@@ -1,6 +1,6 @@
 # Cleanup Rules — 플랜 분류·검증 + 즉시 실행 가이드
 
-이 문서는 `/weekly-audit` 의 Stage 2 (TRIAGE) 와 Stage 4 (EXECUTE) 가 따라야 하는 룰의 단일 근거.
+이 문서는 `/wip-audit` 의 Stage 2 (TRIAGE) 와 Stage 4 (EXECUTE) 가 따라야 하는 룰의 단일 근거.
 
 ## 1. Per-project window 규칙
 

@@ -1,16 +1,16 @@
 ---
-name: weekly-audit
+name: wip-audit
 description: |
-  주간 위생 점검 sub-audit — 진행 중/중단/계획만 있는 작업 파악, 이미 완료된 dead plan 삭제,
-  즉시 가능한 작은 commit 처리, 복잡한 잔여 작업의 핸드오프 프롬프트 생성. 일반적으로
-  사용자는 `/code-audit` 을 통해 호출 — 직접 호출은 '/weekly-audit' 또는 'weekly-audit
-  만 실행' 처럼 명시적일 때만. 사용자가 그냥 '주간 정리해줘' 라고 하면 `/code-audit`
-  라우터가 이 스킬을 호출함.
+  WIP/잔여 작업 위생 점검 sub-audit — 진행 중/중단/계획만 있는 작업 파악, 이미 완료된
+  dead plan 삭제, 즉시 가능한 작은 commit 처리, 복잡한 잔여 작업의 핸드오프 프롬프트
+  생성. 일반적으로 사용자는 `/code-audit` 을 통해 호출 — 직접 호출은 '/wip-audit' 또는
+  'wip-audit 만 실행' 처럼 명시적일 때만. 사용자가 그냥 '주간 정리해줘', 'WIP 정리',
+  '남은 일 뭐 있어' 라고 하면 `/code-audit` 라우터가 이 스킬을 호출함.
 ---
 
-# /weekly-audit — 주간 코드베이스 위생 점검
+# /wip-audit — WIP/잔여 작업 위생 점검
 
-매주 한 번, 사용자의 모든 프로젝트 상태를 한 번에 파악하고 부스러기를 정리하는 스킬.
+여러 프로젝트에 걸친 진행 중/중단/계획만 있는 작업을 한 번에 파악하고 부스러기를 정리하는 스킬.
 
 ## 목적
 
@@ -29,8 +29,8 @@ description: |
 데이터를 한 번에 수집한다 (atomic gather):
 
 ```bash
-bash ~/.claude/skills/weekly-audit/scripts/scan-projects.sh
-bash ~/.claude/skills/weekly-audit/scripts/scan-plans.sh
+bash ~/.claude/skills/wip-audit/scripts/scan-projects.sh
+bash ~/.claude/skills/wip-audit/scripts/scan-plans.sh
 ```
 
 추가로 dev-log 최근 활동 파악 (참고용):
@@ -109,7 +109,7 @@ AskUserQuestion 으로 카테고리 선택:
 ## 트리거 매칭 가이드 (오작동 방지)
 
 ✅ **이 스킬을 사용**:
-- "주간 정리", "/weekly-audit", "뭐 해야 하지", "남은 일 뭐 있어"
+- "/wip-audit", "WIP 정리", "주간 정리", "뭐 해야 하지", "남은 일 뭐 있어"
 - "코드베이스 상태 점검", "audit 해줘", "플랜 정리", "부스러기 정리"
 - "뭐하다 멈췄지", "현재 상태 파악해줘"
 
@@ -131,7 +131,7 @@ AskUserQuestion 으로 카테고리 선택:
 
 ## 출력 형식 일관성
 
-매 주 같은 4개 표 (헤더 동일, 컬럼 동일) 로 출력. 그래야 사용자가 주간 변화를 쉽게 파악할 수 있음.
+매 호출 같은 4개 표 (헤더 동일, 컬럼 동일) 로 출력. 그래야 사용자가 호출 간 변화를 쉽게 파악할 수 있음.
 
 스킬 내부 처리는 자유롭게 하되, 사용자가 보는 최종 출력은 `references/report-format.md` 에 박아둔 템플릿 그대로 따른다.
 
