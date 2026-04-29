@@ -1,0 +1,28 @@
+# Secrets - never commit
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+secrets.json
+
+# Local-machine state
+*.local
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Bundles produced during migration (machine-specific data)
+migration/output/
+migration/bundle-*.tar.gz
+migration/bundle-*.tar.gz.gpg
+
+# Runtime / cache
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Logs
+*.log
