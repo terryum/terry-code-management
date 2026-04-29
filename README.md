@@ -11,6 +11,7 @@ A meta-repository for managing many codebases at once: weekly audits, security c
 ```
 terry-code-management/
 ├── skills/
+│   ├── code-audit/          Umbrella router — runs sub-audits (weekly + security by default)
 │   ├── weekly-audit/        Weekly housekeeping: scan repos + plans, dead-plan cleanup, handoff prompts
 │   └── security-audit/      Cross-repo secret scan, public-exposure check, OSV vulnerability scan
 ├── migration/               Laptop migration toolkit (source → bundle → target → verify)
@@ -21,6 +22,7 @@ terry-code-management/
 ```
 terry-code-management/
 ├── skills/
+│   ├── code-audit/          상위 라우터 — sub-audit 들을 dispatch (기본: weekly + security 순차)
 │   ├── weekly-audit/        주간 위생 — 레포·플랜 스캔, dead-plan 청소, 핸드오프 프롬프트
 │   └── security-audit/      교차 레포 시크릿 스캔, 공개 노출 점검, OSV 취약점 검사
 ├── migration/               노트북 이전 도구 (소스 → 번들 → 타깃 → 검증)
@@ -42,8 +44,10 @@ After install, in any Claude Code session:
 
 설치 후 Claude Code 세션에서:
 
-- `/weekly-audit` or "주간 정리해줘" → weekly housekeeping flow
-- `/security-audit` or "보안 점검해줘" → cross-repo security scan
+- `/code-audit` (no args) → runs weekly + security in order — 인자 없이 호출 시 둘 다 순차 실행
+- `/code-audit 보안 점검해줘` → security only — 보안만
+- `/code-audit 주간 정리` → weekly only — 주간 위생만
+- `/code-audit 리팩토링 필요한 파일` → friendly "🚧 not yet" message + offer to build it — 미구현 안내
 
 ---
 

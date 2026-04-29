@@ -1,11 +1,11 @@
 ---
 name: security-audit
 description: |
-  전체 코드베이스 보안 점검 — secret leak 스캔(gitleaks), 의도치 않은 public 노출 점검,
-  의존성 취약점 (OSV) 스캔, .env 등 민감 파일이 git에 들어갔는지 검사. '보안 점검',
-  'security audit', '/security-audit', '시크릿 스캔', '취약점 검사', '보안 검사',
-  'secret leak', '키 노출', 'public 노출 확인', 'gitleaks' 시 사용. 모든 repo 를
-  순회하여 결과를 한 번에 보고. 단일 파일 코드 리뷰는 이 스킬 대상 아님 (review 스킬 사용).
+  보안 점검 sub-audit — secret leak 스캔(gitleaks), 의도치 않은 public 노출 점검,
+  의존성 취약점 (OSV) 스캔, .env 등 민감 파일이 git에 들어갔는지 검사. 일반적으로
+  사용자는 `/code-audit` 을 통해 호출 — 직접 호출은 '/security-audit' 또는
+  'security-audit 만 실행' 처럼 명시적일 때만. 사용자가 그냥 '보안 점검해줘' 라고
+  하면 `/code-audit` 라우터가 이 스킬을 호출함. 단일 파일 코드 리뷰는 이 스킬 대상 아님.
 ---
 
 # /security-audit — 코드베이스 보안 점검

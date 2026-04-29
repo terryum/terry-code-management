@@ -1,12 +1,11 @@
 ---
 name: weekly-audit
 description: |
-  /Codes 하위 모든 프로젝트의 위생 점검 — 진행 중/중단/계획만 있는 작업을 파악하고,
-  이미 완료된 dead plan 삭제, 즉시 가능한 작은 commit/push 처리, 복잡한 잔여 작업은
-  해당 폴더로 이동할 수 있도록 핸드오프 프롬프트 생성. '주간 정리', '/weekly-audit',
-  '뭐하다 멈췄지', '남은 일 뭐 있어', '코드 상태 점검', '플랜 정리', '부스러기 정리',
-  '뭐 해야 하지', 'audit 해줘', 'housekeeping', 'status check' 시 반드시 이 스킬 사용.
-  주간 1회 정기 호출 용도. 단일 repo 작업이나 단일 plan 검증은 이 스킬 대상 아님.
+  주간 위생 점검 sub-audit — 진행 중/중단/계획만 있는 작업 파악, 이미 완료된 dead plan 삭제,
+  즉시 가능한 작은 commit 처리, 복잡한 잔여 작업의 핸드오프 프롬프트 생성. 일반적으로
+  사용자는 `/code-audit` 을 통해 호출 — 직접 호출은 '/weekly-audit' 또는 'weekly-audit
+  만 실행' 처럼 명시적일 때만. 사용자가 그냥 '주간 정리해줘' 라고 하면 `/code-audit`
+  라우터가 이 스킬을 호출함.
 ---
 
 # /weekly-audit — 주간 코드베이스 위생 점검
