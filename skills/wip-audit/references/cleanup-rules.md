@@ -65,4 +65,4 @@ window = [last_commit - 3 days, last_commit]
 ## 5. 입력 데이터 활용
 
 - `~/Codes/.dev-log/` 의 최근 5개 파일은 *참고용*. 플랜 분류 결정에는 우선순위 낮음 (이미 git log + 코드 상태가 더 정확). 단, "어떤 작업을 했었지?" 같은 사용자 회상 도와줄 때 유용.
-- BizRouter / Anthropic API 사용 — 우선순위 정책 (`~/.claude/CLAUDE.md` 또는 `MEMORY.md` 참조) 그대로 따름.
+- Anthropic / OpenAI API 사용 — 우선순위 정책 (`~/.claude/CLAUDE.md` 또는 `MEMORY.md` 참조) 그대로 따름.
