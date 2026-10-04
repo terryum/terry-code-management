@@ -17,36 +17,25 @@ WORK=$(mktemp -d -t bundle-XXXXXX)
 trap 'rm -rf "$WORK"' EXIT
 
 echo "[1/6] Building manifest..."
-python3 - "$CODES" > "$WORK/manifest.json" <<'PY'
+python3 - "$CODES" "$0" > "$WORK/manifest.json" <<'PY'
 import json, os, subprocess, sys
 codes = sys.argv[1]
 manifest = {"codes_root": codes, "repos": [], "symlinks": []}
-for group in sorted(os.listdir(codes)):
-    gpath = os.path.join(codes, group)
-    if not os.path.isdir(gpath) or group.startswith('.'):
-        continue
-    for repo in sorted(os.listdir(gpath)):
-        rpath = os.path.join(gpath, repo)
-        gdir = os.path.join(rpath, ".git")
-        if not (os.path.isdir(gdir) or os.path.isfile(gdir)):
-            continue
-        try:
-            origin = subprocess.check_output(["git", "-C", rpath, "remote", "get-url", "origin"], text=True).strip()
-        except Exception:
-            origin = ""
-        try:
-            head = subprocess.check_output(["git", "-C", rpath, "rev-parse", "HEAD"], text=True).strip()
-        except Exception:
-            head = ""
-        manifest["repos"].append({
-            "group": group, "name": repo, "path": os.path.relpath(rpath, codes),
-            "origin": origin, "head": head,
-        })
+discover = os.path.join(os.path.dirname(os.path.abspath(sys.argv[2])), "../scripts/discover-repos.sh")
+paths = subprocess.check_output(["bash", discover], env={**os.environ, "CODES_ROOT": codes}, text=True).splitlines()
+for rpath in paths:
+    rel = os.path.relpath(rpath, codes)
+    def git(*args):
+        result = subprocess.run(["git", "-C", rpath, *args], capture_output=True, text=True)
+        return result.stdout.strip()
+    manifest["repos"].append({"group": rel.split('/')[0], "name": os.path.basename(rpath),
+        "path": rel, "origin": git("remote", "get-url", "origin"), "head": git("rev-parse", "HEAD"),
+        "is_worktree": os.path.isfile(os.path.join(rpath, ".git")), "worktrees": git("worktree", "list", "--porcelain")})
 
 # Walk for symlinks under codes_root
 for root, dirs, files in os.walk(codes, followlinks=False):
     # don't descend into .git or node_modules
-    dirs[:] = [d for d in dirs if d not in (".git", "node_modules", "__pycache__", ".next", ".open-next")]
+    dirs[:] = [d for d in dirs if d not in (".git", "node_modules", "__pycache__", ".next", ".open-next", "_backups", "_archives", ".local")]
     for entry in dirs + files:
         full = os.path.join(root, entry)
         if os.path.islink(full):
@@ -71,13 +60,13 @@ for sub in "$CODES"/*/; do
   name=$(basename "$sub")
   if [ ! -d "$sub.git" ] && [ ! -d "$sub/.git" ]; then
     # if it's a group folder (contains git repos), skip it (those are handled by manifest)
-    has_repos=$(find "$sub" -mindepth 2 -maxdepth 3 -type d -name '.git' -print -quit 2>/dev/null)
+    has_repos=$(find "$sub" -type d -name '.git' -print -quit 2>/dev/null)
     if [ -z "$has_repos" ]; then
       echo "  including non-repo subfolder: $name"
       mkdir -p "$WORK/non-git/$name"
       rsync -a --exclude='.env*' --exclude='*.key' --exclude='*.pem' \
         --exclude='credentials.json' --exclude='secrets.json' \
-        --exclude='node_modules' --exclude='__pycache__' --exclude='.DS_Store' \
+        --exclude='_backups' --exclude='_archives' --exclude='.local' --exclude='node_modules' --exclude='__pycache__' --exclude='.DS_Store' \
         "$sub/" "$WORK/non-git/$name/"
     fi
   fi

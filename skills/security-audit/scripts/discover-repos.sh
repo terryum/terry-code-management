@@ -1,9 +1,6 @@
-#!/bin/bash
-# Discover every git repo under $CODES_ROOT (default: ~/Codes).
-# Output: one absolute path per line.
-# Used by all 4 scan scripts as the input list.
-
-CODES="${CODES_ROOT:-$HOME/Codes}"
-find "$CODES" -mindepth 2 -maxdepth 4 -type d -name '.git' 2>/dev/null \
-  | xargs -I{} dirname {} \
-  | grep -v "$CODES/terry-code-management$"  # exclude self
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+bash "$SCRIPT_DIR/../../../scripts/discover-repos.sh" | while IFS= read -r repo; do
+  [ "$repo" = "$(cd "$SCRIPT_DIR/../../.." && pwd)" ] || printf '%s\n' "$repo"
+done

@@ -10,7 +10,7 @@ set -euo pipefail
 
 CODES="${CODES_ROOT:-$HOME/Codes}"
 DEFAULT_GROUP="${MIGRATION_GROUP:-personal}"
-mkdir -p "$CODES/$DEFAULT_GROUP"
+mkdir -p "$CODES"
 
 USERS=("$@")
 if [ ${#USERS[@]} -eq 0 ]; then
@@ -29,12 +29,13 @@ for user in "${USERS[@]}"; do
   echo "  $count public repos found"
   gh repo list "$user" --visibility public --limit 1000 --json name,sshUrl,url \
     -q '.[] | [.name, .sshUrl, .url] | @tsv' | while IFS=$'\t' read -r name sshurl httpurl; do
-    target="$CODES/$DEFAULT_GROUP/$name"
-    if [ -d "$target/.git" ]; then
+    target=$(python3 "$(dirname "$0")/resolve-target.py" "$CODES" "$DEFAULT_GROUP" "$name" "$httpurl")
+    if [ -e "$target/.git" ]; then
       echo "  ✓ skip (exists): $name"
       continue
     fi
     echo "  ↓ clone $name"
+    mkdir -p "$(dirname "$target")"
     git clone "$httpurl" "$target" || echo "    ⚠ failed: $name"
   done
 done

@@ -10,7 +10,7 @@ CODES="${CODES_ROOT:-$HOME/Codes}"
 # Find the most recent manifest under ~/.claude/ or extracted location
 MANIFEST="${1:-}"
 if [ -z "$MANIFEST" ]; then
-  CANDIDATE=$(find "$CODES" -maxdepth 3 -name 'manifest.json' -path '*/migration/*' 2>/dev/null | head -1)
+  CANDIDATE=$(find "$CODES" -name 'manifest.json' -path '*/migration/*' 2>/dev/null | head -1)
   MANIFEST="${CANDIDATE:-/tmp/restore-*/extracted/manifest.json}"
 fi
 
@@ -33,7 +33,7 @@ green, yellow, red = [], [], []
 # 1. Repos
 for r in m.get("repos", []):
     rpath = os.path.join(codes, r["path"])
-    if not os.path.isdir(os.path.join(rpath, ".git")):
+    if not os.path.exists(os.path.join(rpath, ".git")):
         red.append(f"missing repo: {r['path']} ({r['origin']})")
         continue
     try:

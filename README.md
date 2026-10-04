@@ -111,3 +111,19 @@ See `docs/security.md` for details / 상세는 `docs/security.md` 참조.
 ## License
 
 MIT
+
+## Repository discovery
+
+`scripts/discover-repos.sh` is the shared active-repository inventory. It searches
+all classification levels, includes `.git` files for linked worktrees, never follows
+symlinks, and prunes backups, local operations, caches and dependency/build output.
+Set `CODES_ROOT` to inspect another workspace. Audit and migration scripts use this
+inventory. Local reports and operations belong under ignored `.local/`.
+
+Verify discovery with `python3 scripts/test_discovery.py`.
+
+Machine-specific exclusions can be listed as workspace-relative paths in
+`.local/exclude-paths.txt` (or `CODES_EXCLUDE_FILE`). Backup exclusions are always
+applied. Migration clones reuse matching active local paths; set
+`MIGRATION_MANIFEST` to preserve the source machine's hierarchy on a new machine.
+Unmapped personal clones go under `personal/projects/` for later classification.

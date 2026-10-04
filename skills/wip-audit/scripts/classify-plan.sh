@@ -15,9 +15,14 @@ CODES="${CODES_ROOT:-$HOME/Codes}"
 
 # Discover all repo names (any directory containing .git/) — sort by length DESC
 # so that longer names match before substrings (e.g. "foo-bar" before "foo").
-PROJECTS=$(find "$CODES" -mindepth 2 -maxdepth 3 -type d -name '.git' 2>/dev/null \
-  | xargs -I{} dirname {} \
-  | xargs -I{} basename {} \
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECTS=$(bash "$SCRIPT_DIR/../../../scripts/discover-repos.sh" \
+  | while IFS= read -r repo; do
+    origin=$(git -C "$repo" remote get-url origin 2>/dev/null || true)
+    name="${origin##*/}"; name="${name%.git}"
+    [ -n "$name" ] || name=$(basename "$repo")
+    printf '%s\n' "$name"
+  done \
   | awk '{ print length, $0 }' | sort -rn | awk '{ print $2 }')
 
 [ -z "$PROJECTS" ] && { echo "unknown"; exit 0; }
