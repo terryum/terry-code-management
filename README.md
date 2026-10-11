@@ -127,3 +127,31 @@ Machine-specific exclusions can be listed as workspace-relative paths in
 applied. Migration clones reuse matching active local paths; set
 `MIGRATION_MANIFEST` to preserve the source machine's hierarchy on a new machine.
 Unmapped personal clones go under `personal/projects/` for later classification.
+
+## Workspace README inventory
+
+`scripts/workspace-readme.py --root /path/to/workspace` checks a classification
+workspace's README against its navigation folders, independent repositories,
+symlink targets, origins, and live GitHub visibility/descriptions. It stops at
+repository boundaries; repository-internal source folders belong in project
+READMEs. Hidden folders, dependency/build output and preservation backups are
+excluded. README must contain exactly one `<!-- workspace-inventory:start -->`
+and `<!-- workspace-inventory:end -->` marker pair. Text outside the markers is
+preserved. Check mode prints a diff and exits 1 when stale, 0 when current, or 2
+on verification failure. Requires Python 3.9+ and directory-routed authenticated
+`gh`; it does not create repositories, change remotes, commit or push.
+
+Pass `--update` to refresh only changed inventory. Pass `--install-hooks` to
+install local `pre-push` checks in the discovered repositories. Existing hooks
+are preserved as `pre-push.workspace-readme-original` and run with their original
+arguments/stdin/exit status after the check. Shared hooks outside the workspace
+and symlinked hooks require manual integration. Verification failure preserves
+README and warns without blocking the push. Hooks are local to the machine;
+reinstall after clones or moves. `--no-verify` and clients that bypass Git hooks
+require a manual check. To uninstall, remove the managed `pre-push` wrapper and
+restore its original-hook backup if present.
+
+Verify with `python3 scripts/test_workspace_readme.py`. Tests cover visibility
+changes, preserving manual prose, classification/link discovery, repeated hook
+installation, existing hook stdin/exit status, inherited Git environment and
+failed metadata verification without writes.
